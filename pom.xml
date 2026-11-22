@@ -14,7 +14,7 @@
         <jacoco.version>0.8.16</jacoco.version>
         <backend-food-api.version>1.2.3</backend-food-api.version>
         <hash4j.version>0.22.0</hash4j.version>
-        <pdfbox.version>3.0.8</pdfbox.version>
+        <quarkus-pdfbox.version>1.2.3</quarkus-pdfbox.version>
         <sonar.organization>neuland-ingolstadt</sonar.organization>
         <sonar.projectKey>neuland-ingolstadt_app-food</sonar.projectKey>
         <sonar.projectName>app-food</sonar.projectName>
@@ -46,9 +46,14 @@
                 <version>${hash4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.pdfbox</groupId>
-                <artifactId>pdfbox</artifactId>
-                <version>${pdfbox.version}</version>
+                <groupId>io.quarkiverse.pdfbox</groupId>
+                <artifactId>quarkus-pdfbox</artifactId>
+                <version>${quarkus-pdfbox.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk18on</artifactId>
+                <version>1.82</version>
             </dependency>
             <dependency>
                 <groupId>${quarkus.platform.group-id}</groupId>
