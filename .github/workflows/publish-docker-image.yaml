@@ -78,11 +78,12 @@ jobs:
           server-username: GITHUB_ACTOR
           server-password: GITHUB_TOKEN
 
-      - name: Build native executable
+      # JVM image: PDFBox (Canisius) is not GraalVM-friendly without extra native config.
+      - name: Package JVM application
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./mvnw -B package -Dnative -Dquarkus.native.container-build=true -DskipTests -pl bootstrap -am
+        run: ./mvnw -B package -DskipTests -pl bootstrap -am
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -107,7 +108,7 @@ jobs:
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
         with:
           context: bootstrap
-          file: bootstrap/src/main/docker/Dockerfile.native-micro
+          file: bootstrap/src/main/docker/Dockerfile.jvm
           push: ${{ !startsWith(github.ref, 'refs/heads/dependabot/') && !startsWith(github.ref, 'refs/heads/renovate/') }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
