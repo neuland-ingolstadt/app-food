@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<speiseplan>
+  <tag timestamp="1795388400">
+    <item>
+      <category>Essen 1</category>
+      <title>Spaghetti Bolognese (A,C,G,I)</title>
+      <description></description>
+      <preis1>3,15</preis1>
+      <preis2>5,00</preis2>
+      <preis3>6,00</preis3>
+      <einheit>pro Portion</einheit>
+      <piktogramme>&lt;img src='a.png' class='infomax-food-icon R' /&gt;&lt;img src='b.png' class='infomax-food-icon MSC' /&gt;</piktogramme>
+      <kj>1500</kj>
+      <kcal>358,5</kcal>
+      <fett>12,5</fett>
+      <gesfett>4,2</gesfett>
+      <kh>45,3</kh>
+      <zucker>5,1</zucker>
+      <ballaststoffe>3,2</ballaststoffe>
+      <eiweiss>15,8</eiweiss>
+      <salz>2,1</salz>
+    </item>
+    <item>
+      <category>Essen 1</category>
+      <title>Spaghetti Bolognese (A,C,G,I) mit Parmesan (G)</title>
+      <preis1>3,90</preis1>
+      <preis2>5,90</preis2>
+      <preis3>6,90</preis3>
+      <piktogramme></piktogramme>
+    </item>
+    <item>
+      <category>Suppe 1</category>
+      <title>  tomatensuppe (A) (F,A)  </title>
+      <preis1>1,00</preis1>
+      <preis2>1,50</preis2>
+      <preis3>2,00</preis3>
+      <piktogramme><![CDATA[<img class='infomax-food-icon veg' />]]></piktogramme>
+    </item>
+    <item>
+      <category/>
+      <title/>
+      <preis1/>
+    </item>
+  </tag>
+  <tag timestamp="1795474800">
+    <item>
+      <category>Salat 2</category>
+      <title>Salatbuffet</title>
+      <preis1>2,50</preis1>
+      <preis2>3,50</preis2>
+      <preis3>4,50</preis3>
+    </item>
+  </tag>
+</speiseplan>
