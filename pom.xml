@@ -12,7 +12,7 @@
         <maven.compiler.release>25</maven.compiler.release>
         <surefire-plugin.version>3.6.1</surefire-plugin.version>
         <jacoco.version>0.8.16</jacoco.version>
-        <backend-food-api.version>0.0.0-SNAPSHOT</backend-food-api.version>
+        <backend-food-api.version>1.2.3</backend-food-api.version>
         <hash4j.version>0.22.0</hash4j.version>
         <pdfbox.version>3.0.8</pdfbox.version>
         <sonar.organization>neuland-ingolstadt</sonar.organization>
@@ -25,8 +25,11 @@
     
     <repositories>
         <repository>
-            <id>github</id>
+            <id>github-neuland-contracts</id>
             <url>https://maven.pkg.github.com/neuland-ingolstadt/app-backend-contracts</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
     </repositories>
 

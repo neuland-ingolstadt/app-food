@@ -41,7 +41,9 @@ Hexagonal Quarkus layout (same shape as `app-backend-core`):
 ./mvnw package -pl bootstrap -am
 ```
 
-Contract dependency: `app.neuland:backend-food-api` from GitHub Packages (or a local `mvn install` of `app-backend-contracts`).
+Contract dependency: `app.neuland:backend-food-api` from
+[app-backend-contracts](https://github.com/neuland-ingolstadt/app-backend-contracts)
+(GitHub Packages).
 
 ## License
 
