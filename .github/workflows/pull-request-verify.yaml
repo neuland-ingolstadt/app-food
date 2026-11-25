@@ -37,28 +37,6 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      # CI analysis cannot run while SonarCloud Automatic Analysis is enabled.
-      - name: Disable SonarCloud Automatic Analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          set -euo pipefail
-          code=$(curl -sS -o /tmp/sonar-autoscan.body -w "%{http_code}" \
-            -u "${SONAR_TOKEN}:" -X POST \
-            "https://sonarcloud.io/api/autoscan/activation" \
-            -d "projectKey=neuland-ingolstadt_app-food&enable=false")
-          echo "autoscan disable HTTP ${code}"
-          cat /tmp/sonar-autoscan.body || true
-          if [[ "${code}" == "200" || "${code}" == "204" ]]; then
-            exit 0
-          fi
-          if grep -qiE 'already|not enabled|disabled' /tmp/sonar-autoscan.body 2>/dev/null; then
-            echo "Automatic Analysis already disabled"
-            exit 0
-          fi
-          echo "::error::Failed to disable SonarCloud Automatic Analysis (HTTP ${code})"
-          exit 1
-
       - name: Run tests and SonarCloud analysis
         env:
           GITHUB_ACTOR: ${{ github.actor }}
