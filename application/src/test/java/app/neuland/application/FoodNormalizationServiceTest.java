@@ -222,4 +222,44 @@ class FoodNormalizationServiceTest {
         assertEquals(List.of("R"), days.get(0).meals().get(0).flags());
         assertEquals(new MealPrice(null, null, null), days.get(0).meals().get(0).price());
     }
+
+    @Test
+    void unifyPreservesNullAndNonEmptyAllergens() {
+        RawMeal known = raw("Schnitzel", "Essen", 3.9);
+        RawMeal unknown = new RawMeal(
+                FoodNormalizationService.getMealDayHash(DAY, "Thai Curry"),
+                "Thai Curry", null, "Essen", new MealPrice(6.9, 7.9, 8.9),
+                null, List.of(), null, null, true, Restaurant.REIMANNS, null, null);
+
+        List<MealDay> days = service.unifyFoodEntries(
+                RawMealTranslations.identity(List.of(new RawMealDay(DAY, List.of(known, unknown)))));
+
+        assertEquals(List.of("A"), days.get(0).meals().get(0).allergens());
+        assertNull(days.get(0).meals().get(1).allergens());
+    }
+
+    @Test
+    void mergeAndUnifyDoNotDropAllergensOnParentOrVariant() {
+        RawMeal parent = new RawMeal(
+                FoodNormalizationService.getMealDayHash(DAY, "Spaghetti"),
+                "Spaghetti", null, "Essen", new MealPrice(3.0, 4.0, 5.0),
+                List.of("A", "C", "G", "I"), List.of(), null, null, null,
+                Restaurant.INGOLSTADT_MENSA, null, null);
+        RawMeal withCheese = new RawMeal(
+                FoodNormalizationService.getMealDayHash(DAY, "Spaghetti mit Parmesan"),
+                "Spaghetti mit Parmesan", null, "Essen", new MealPrice(3.5, 4.5, 5.5),
+                List.of("G"), List.of(), null, null, null,
+                Restaurant.INGOLSTADT_MENSA, null, null);
+
+        List<RawMeal> merged = service.mergeDayEntries(List.of(parent, withCheese));
+        assertEquals(1, merged.size());
+        assertEquals(List.of("A", "C", "G", "I"), merged.get(0).allergens());
+        assertEquals(List.of("G"), merged.get(0).variants().get(0).allergens());
+
+        List<MealDay> days = service.unifyFoodEntries(
+                RawMealTranslations.identity(List.of(new RawMealDay(DAY, merged))));
+        Meal meal = days.get(0).meals().get(0);
+        assertEquals(List.of("A", "C", "G", "I"), meal.allergens());
+        assertEquals(List.of("G"), meal.variations().get(0).allergens());
+    }
 }

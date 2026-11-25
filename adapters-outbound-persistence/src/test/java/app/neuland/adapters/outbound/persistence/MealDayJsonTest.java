@@ -1,6 +1,7 @@
 package app.neuland.adapters.outbound.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import app.neuland.model.food.Meal;
@@ -45,7 +46,27 @@ class MealDayJsonTest {
         String serialized = json.write(days);
 
         assertTrue(serialized.contains("\"2026-11-23\""));
-        assertEquals(days, assertDoesNotThrowRead(json, serialized));
+        assertTrue(serialized.contains("\"A\""));
+        assertTrue(serialized.contains("\"G\""));
+        List<MealDay> roundTripped = assertDoesNotThrowRead(json, serialized);
+        assertEquals(days, roundTripped);
+        assertEquals(List.of("A", "G"), roundTripped.get(0).meals().get(0).allergens());
+        assertEquals(List.of("A"), roundTripped.get(0).meals().get(0).variations().get(0).allergens());
+    }
+
+    @Test
+    void roundTripPreservesNullAllergens() {
+        Map<Language, String> name = new EnumMap<>(Language.class);
+        name.put(Language.DE, "Thai Curry");
+        name.put(Language.EN, "Thai Curry");
+        Meal meal = new Meal("r1", name, MealCategory.MAIN, new MealPrice(6.9, 7.9, 8.9), null,
+                List.of(), null, Language.DE, true, Restaurant.REIMANNS, List.of());
+        MealDayJson json = new MealDayJson(mapper);
+
+        List<MealDay> roundTripped = assertDoesNotThrowRead(json,
+                json.write(List.of(new MealDay(LocalDate.of(2026, 11, 23), List.of(meal)))));
+
+        assertNull(roundTripped.get(0).meals().get(0).allergens());
     }
 
     private static List<MealDay> assertDoesNotThrowRead(MealDayJson json, String serialized) {

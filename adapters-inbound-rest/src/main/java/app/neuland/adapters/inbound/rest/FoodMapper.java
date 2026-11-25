@@ -36,7 +36,7 @@ final class FoodMapper {
                 .name(toApi(meal.name()))
                 .category(toApi(meal.category()))
                 .price(toApi(meal.price()))
-                .allergens(new ArrayList<>(nullToEmpty(meal.allergens())))
+                .allergens(copyOrNull(meal.allergens()))
                 .flags(new ArrayList<>(nullToEmpty(meal.flags())))
                 .nutrition(toApi(meal.nutrition()))
                 .originalLanguage(toApi(meal.originalLanguage()))
@@ -51,7 +51,7 @@ final class FoodMapper {
                 .name(toApi(variation.name()))
                 .additional(variation.additional())
                 .price(toApi(variation.price()))
-                .allergens(new ArrayList<>(nullToEmpty(variation.allergens())))
+                .allergens(copyOrNull(variation.allergens()))
                 .flags(new ArrayList<>(nullToEmpty(variation.flags())))
                 .nutrition(toApi(variation.nutrition()))
                 .originalLanguage(toApi(variation.originalLanguage()))
@@ -116,5 +116,10 @@ final class FoodMapper {
 
     private static <T> List<T> nullToEmpty(List<T> list) {
         return list == null ? List.of() : list;
+    }
+
+    /** Keeps {@code null} as unknown allergens; copies non-null lists for the mutable API model. */
+    private static List<String> copyOrNull(List<String> allergens) {
+        return allergens == null ? null : new ArrayList<>(allergens);
     }
 }

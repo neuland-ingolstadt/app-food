@@ -46,9 +46,26 @@ class FoodMapperTest {
         assertEquals("d1", apiVariation.getParentMealId());
         assertTrue(apiVariation.getAdditional());
         assertNull(apiVariation.getPrice().getEmployee());
-        assertEquals(List.of(), apiVariation.getAllergens());
+        assertNull(apiVariation.getAllergens());
         assertEquals(List.of("veg"), apiVariation.getFlags());
         assertNull(apiVariation.getNutrition());
+    }
+
+    @Test
+    void preservesNullAllergensAsUnknown() {
+        Map<Language, String> name = Map.of(Language.DE, "Thai Curry", Language.EN, "Thai Curry");
+        app.neuland.model.food.Meal meal = new app.neuland.model.food.Meal(
+                "r1", name, app.neuland.model.food.MealCategory.MAIN,
+                new MealPrice(6.9, 7.9, 8.9), null, List.of(), null, Language.DE, true,
+                app.neuland.model.food.Restaurant.REIMANNS, List.of());
+
+        Meal api = FoodMapper.toApi(meal);
+
+        assertNull(api.getAllergens());
+        assertEquals(List.of("A"), FoodMapper.toApi(new app.neuland.model.food.Meal(
+                "m1", name, app.neuland.model.food.MealCategory.MAIN,
+                new MealPrice(1.0, 2.0, 3.0), List.of("A"), List.of(), null, Language.DE, false,
+                app.neuland.model.food.Restaurant.INGOLSTADT_MENSA, List.of())).getAllergens());
     }
 
     @Test

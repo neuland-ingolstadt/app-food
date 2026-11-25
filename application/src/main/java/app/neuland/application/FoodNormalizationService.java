@@ -204,7 +204,8 @@ public class FoodNormalizationService {
                 capitalize(meal),
                 standardizeCategory(category),
                 priceOrEmpty(meal.prices()),
-                nullToEmpty(meal.allergens()),
+                // Preserve null (unknown) vs empty (parsed, no codes) for allergen safety.
+                meal.allergens(),
                 nullToEmpty(cleanMealFlags(meal.flags())),
                 meal.nutrition(),
                 meal.originalLanguage() != null ? meal.originalLanguage() : Language.DE,
@@ -220,7 +221,7 @@ public class FoodNormalizationService {
                 capitalize(variant),
                 Boolean.TRUE.equals(variant.additional()),
                 priceOrEmpty(variant.prices()),
-                nullToEmpty(variant.allergens()),
+                variant.allergens(),
                 nullToEmpty(cleanMealFlags(variant.flags())),
                 variant.nutrition(),
                 variant.originalLanguage() != null ? variant.originalLanguage() : Language.DE,

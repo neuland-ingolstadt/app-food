@@ -104,4 +104,45 @@ class MensaXmlParserTest {
         List<RawMealDay> days = MensaXmlParser.parse(xml.getBytes(StandardCharsets.ISO_8859_1), Restaurant.REIMANNS);
         assertEquals("Gemüse", days.get(0).meals().get(0).name());
     }
+
+    @Test
+    void trimsWhitespaceAllergensAndDropsBlankTokens() {
+        String xml = """
+                <speiseplan><tag timestamp="1795388400">
+                  <item>
+                    <category>Essen 1</category>
+                    <title>Curry ( A , , C ,G )</title>
+                    <preis1>3,00</preis1>
+                  </item>
+                </tag></speiseplan>
+                """;
+        RawMeal meal = MensaXmlParser.parse(xml, Restaurant.INGOLSTADT_MENSA).get(0).meals().get(0);
+
+        assertEquals("Curry", meal.name());
+        assertEquals(List.of("A", "C", "G"), meal.allergens());
+    }
+
+    @Test
+    void goldenAllergensSurviveMergeAndUnify() throws IOException {
+        FoodNormalizationService normalization = new FoodNormalizationService();
+        List<RawMealDay> parsed = MensaXmlParser.parse(fixture(), Restaurant.INGOLSTADT_MENSA);
+        List<RawMealDay> merged = normalization.mergeMealVariants(parsed);
+        List<RawMealDay> translated = app.neuland.application.RawMealTranslations.identity(merged);
+        List<app.neuland.model.food.MealDay> days = normalization.unifyFoodEntries(translated);
+
+        app.neuland.model.food.Meal spaghetti = days.get(0).meals().stream()
+                .filter(m -> m.name().get(app.neuland.model.shared.Language.DE).startsWith("Spaghetti"))
+                .findFirst()
+                .orElseThrow();
+        assertEquals(List.of("A", "C", "G", "I"), spaghetti.allergens());
+        assertEquals(1, spaghetti.variations().size());
+        // Variant title also lists (A,C,G,I) plus (G) — all codes must survive merge+unify.
+        assertEquals(List.of("A", "C", "G", "I"), spaghetti.variations().get(0).allergens());
+
+        app.neuland.model.food.Meal soup = days.get(0).meals().stream()
+                .filter(m -> m.name().get(app.neuland.model.shared.Language.DE).equalsIgnoreCase("Tomatensuppe"))
+                .findFirst()
+                .orElseThrow();
+        assertEquals(List.of("A", "F"), soup.allergens());
+    }
 }

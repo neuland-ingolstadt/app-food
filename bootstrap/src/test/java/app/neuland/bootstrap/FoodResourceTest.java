@@ -118,6 +118,8 @@ class FoodResourceTest {
         .then()
                 .statusCode(400)
                 .contentType("application/problem+json")
+                .body("status", equalTo(400))
+                .body("title", equalTo("Bad Request"))
                 .body("detail", containsString("mealDateFrom"));
     }
 
@@ -130,7 +132,10 @@ class FoodResourceTest {
         .when()
                 .get("/meals")
         .then()
-                .statusCode(400);
+                .statusCode(400)
+                .contentType("application/problem+json")
+                .body("status", equalTo(400))
+                .body("title", equalTo("Bad Request"));
     }
 
     @Test
