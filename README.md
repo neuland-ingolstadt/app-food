@@ -1,4 +1,4 @@
-# app-food
+# app-food-srv
 
 Campus food microservice for Neuland — menus from Mensa, Reimanns and Canisius, normalized and cached for the public API.
 
