@@ -15,7 +15,7 @@
         <backend-food-api.version>1.2.4</backend-food-api.version>
         <hash4j.version>0.22.0</hash4j.version>
         <quarkus-pdfbox.version>1.2.3</quarkus-pdfbox.version>
-        <bouncycastle.version>1.86</bouncycastle.version>
+        <bouncycastle.version>1.87</bouncycastle.version>
         <sonar.organization>neuland-ingolstadt</sonar.organization>
         <sonar.projectKey>neuland-ingolstadt_app-food</sonar.projectKey>
         <sonar.projectName>app-food</sonar.projectName>
